@@ -7,7 +7,7 @@ inputs:
 outpus:
   issue:
     description: 'Issue number this action was run for'
-    topics:
+  topics:
     description: 'Array of unique community topic references found in the issue. ex: [ [ ID, SLUG ], [ ID, SLUG ]]'
   length:
     description: 'Length of the zeds array for checking in workflow control statements, ex: 3 (for above zeds example)'
