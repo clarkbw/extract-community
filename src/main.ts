@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
-import {zeds} from './zeds';
+import {community} from './community';
 
 export async function run(): Promise<void> {
   try {
-    zeds();
+    community();
   } catch (error) {
     core.setFailed(error.message);
   }

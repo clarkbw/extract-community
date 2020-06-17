@@ -3,16 +3,16 @@
     "url": "https://api.github.com/repos/clarkbw/extract-zds-test/issues/12345/comments",
     "data" : [
        {
-          "body" : "[ZD-123](https://github.zendesk.com/agent/tickets/123) is also impacted."
+          "body" : "[NuGet Bug](https://github.community/t/third-support-issue/123) is also impacted."
        },
        { 
           "body": "Lets look at this tomorrow"
        },
        {
-          "body" : "ZD-1234\r\n\r\n la la al\n\r its all found in ZD-123 and ZD-12345."
+          "body" : "We're also seeing this here: https://github.community/t/first-support-issue/1"
        },
        {
-          "body" : "More types [ZD#123456](https://github.zendesk.com/agent/tickets/12)"
+          "body" : "Here's an example https://github.community/t/second-support-issue/12"
        }
     ]
  }

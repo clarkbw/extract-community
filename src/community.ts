@@ -2,49 +2,39 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import {type} from 'os';
 
-// export const ZD_REGEX = /ZD-(\d+)|github\.zendesk\.com\/agent\/tickets\/(\d+)/;
-export const ZD_REGEX = /ZD-(\d+)/g;
-export const ZD_URL_REGEX = /github\.zendesk\.com\/agent\/tickets\/(\d+)/g;
+// https://github.community/t/bug-nuget-support-build-metadata-properly/117606
+export const COMMUNITY_TOPIC_REGEX = /github\.community\/t\/(.+)\/(\d+)/g;
 
-export async function zeds(): Promise<void> {
+export async function community(): Promise<void> {
   try {
     const context = github.context;
-    const zeds = await query();
-    console.log('ZEDS', zeds);
+    const topics = await query();
+    console.log('TOPICS', topics);
 
-    core.setOutput('zeds', JSON.stringify(zeds));
+    core.setOutput('topics', JSON.stringify(topics));
     // https://github.community/t/getting-object-length/17802/3
-    core.setOutput('length', `${zeds.length}`);
+    core.setOutput('length', `${topics.length}`);
     core.setOutput('issue', `${context.issue.number}`);
   } catch (error) {
     core.setFailed(error.message);
   }
 }
 
-export async function query(): Promise<Array<string>> {
+export async function query(): Promise<Array<[string, string]>> {
   const token = core.getInput('token', {required: true});
 
   const octokit: github.GitHub = new github.GitHub(token);
   const context = github.context;
-  let zeds = await bodies(octokit);
+  let topics = await bodies(octokit);
 
-  return [
-    ...new Set(
-      zeds
-        .map((issue: any) => {
-          let matches: Array<string> = [];
-
-          const shorthands = [...issue.matchAll(ZD_REGEX)];
-          matches = matches.concat(shorthands.map((m: any) => m[0]));
-
-          const urls = [...issue.matchAll(ZD_URL_REGEX)];
-          matches = matches.concat(urls.map((m: any) => `ZD-${m[1]}`));
-
-          return matches;
-        })
-        .flat()
-    ).keys()
-  ].sort();
+  const set = new Map();
+  topics.forEach((issue: any) => {
+    const urls = [...issue.matchAll(COMMUNITY_TOPIC_REGEX)];
+    urls.forEach((m: any) => {
+      set.set(m[2], m[1]);
+    });
+  });
+  return [...set];
 }
 
 export async function bodies(octokit: github.GitHub): Promise<Array<string>> {
